@@ -11,6 +11,8 @@ requires-python = ">=3.11"
 dependencies = [
    "matplotlib",
    "numpy",
+   "Pillow",
+   "transformers",
 ]
 
 [project.optional-dependencies]
@@ -55,5 +57,7 @@ exclude = ["venv/*", ".venv/*"]
 [[tool.mypy.overrides]]
 module = [
     "matplotlib.*",
+    "PIL.*",
+    "transformers.*",
 ]
 ignore_missing_imports = true
