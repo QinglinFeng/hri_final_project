@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Environment
+
+Always activate the virtual environment before running any commands:
+```bash
+source .venv/bin/activate
+```
+
+Use `uv pip install` (not `pip install`) to install packages.
+
 ## Commands
 
 **Install dependencies:**

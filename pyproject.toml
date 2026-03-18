@@ -12,6 +12,7 @@ dependencies = [
    "matplotlib",
    "numpy",
    "Pillow",
+   "torch",
    "transformers",
 ]
 

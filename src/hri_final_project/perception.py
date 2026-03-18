@@ -41,7 +41,7 @@ class MoonDreamPerception:
             model_id,
             revision=revision,
             trust_remote_code=True,
-        )
+        ).to("mps")
 
     def query(self, image_path: Path, prompt: str) -> PerceptionResult:
         """Query the VLM with an image and a classification prompt.
