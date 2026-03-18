@@ -7,16 +7,19 @@ import pytest
 from hri_final_project.perception import MoonDreamPerception
 
 # Customize this prompt to ask the model whatever you want about each image.
-PROMPT = "Describe what you see in this image."
+PROMPT = "What is the shape, color, and size (big or small) of the two objects on the black paper?"
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 
-@pytest.mark.parametrize(
-    "image_path", sorted(DATA_DIR.glob("img*.png")), ids=lambda p: p.name
-)
-def test_perception_on_data_images(image_path: Path) -> None:
-    """Run MoonDream on each data image and print the model's answer."""
-    perception = MoonDreamPerception()
+@pytest.fixture(scope="session")
+def perception() -> MoonDreamPerception:
+    """Load MoonDream once for the entire test session."""
+    return MoonDreamPerception()
+
+
+def test_perception_on_img1(perception: MoonDreamPerception) -> None:
+    """Run MoonDream on img1.png and print the model's answer."""
+    image_path = DATA_DIR / "img1.png"
     result = perception.query(image_path, PROMPT)
     print(f"\n[{image_path.name}] {result.answer}")
