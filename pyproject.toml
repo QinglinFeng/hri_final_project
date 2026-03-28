@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
    "anthropic",
+   "flask",
    "matplotlib",
    "numpy",
    "Pillow",
@@ -53,7 +54,7 @@ wrap-descriptions = 88
 strict_equality = true
 disallow_untyped_calls = true
 warn_unreachable = true
-exclude = ["venv/*", ".venv/*"]
+exclude = ["venv/*", ".venv/*", "pepper_ros_node.py", "woz_panel.py"]
 
 [[tool.mypy.overrides]]
 module = [
