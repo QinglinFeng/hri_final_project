@@ -20,13 +20,27 @@ Usage:
 
 import argparse
 import base64
+import struct
+import zlib
 
 import requests
 import rospy
-import actionlib
-from naoqi_bridge_msgs.msg import SpeechWithFeedbackAction, SpeechWithFeedbackGoal
-from sensor_msgs.msg import CompressedImage
+from sensor_msgs.msg import Image
 from std_msgs.msg import String
+
+
+def _encode_png(width, height, rgb_data):
+    """Encode raw RGB bytes as a PNG (stdlib only, no Pillow needed)."""
+
+    def chunk(tag, data):
+        c = tag + data
+        return struct.pack(">I", len(data)) + c + struct.pack(">I", zlib.crc32(c) & 0xFFFFFFFF)
+
+    ihdr = chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+    raw = b"".join(b"\x00" + rgb_data[y * width * 3:(y + 1) * width * 3] for y in range(height))
+    idat = chunk(b"IDAT", zlib.compress(raw))
+    iend = chunk(b"IEND", b"")
+    return b"\x89PNG\r\n\x1a\n" + ihdr + idat + iend
 
 SERVER_URL = "http://localhost:5000"
 
@@ -40,22 +54,21 @@ class PepperNode(object):
         self._latest_image_msg = None
 
         # ── Subscribe to Pepper's front camera ────────────────────────────
-        # naoqi_driver publishes compressed images by default
+        # naoqi_driver publishes uncompressed rgb8 images
         rospy.Subscriber(
-            "/naoqi_driver/camera/front/image_raw/compressed",
-            CompressedImage,
+            "/naoqi_driver/camera/front/image_raw",
+            Image,
             self._on_image,
             queue_size=1,
         )
 
-        # ── TTS action client ──────────────────────────────────────────────
-        self._tts_client = actionlib.SimpleActionClient(
-            "/naoqi_driver/speech",
-            SpeechWithFeedbackAction,
+        # ── TTS publisher (simple String topic) ───────────────────────────
+        self._speech_pub = rospy.Publisher(
+            "/speech",
+            String,
+            queue_size=5,
         )
-        rospy.loginfo("Waiting for TTS action server...")
-        self._tts_client.wait_for_server(timeout=rospy.Duration(10.0))
-        rospy.loginfo("TTS action server ready.")
+        rospy.sleep(0.5)  # let publisher register
 
         # ── Animation/gesture publisher ────────────────────────────────────
         # Publishes a tag name to trigger Pepper's built-in tagged animations.
@@ -78,15 +91,22 @@ class PepperNode(object):
             rospy.logwarn("No camera image received yet.")
             return None
 
-        # CompressedImage.data is already bytes
-        image_b64 = base64.b64encode(bytes(self._latest_image_msg.data)).decode("utf-8")
-        # Format is e.g. "jpeg" from "image/jpeg"
-        fmt = self._latest_image_msg.format.split("/")[-1].strip()
+        msg = self._latest_image_msg
+        rgb = bytes(msg.data)
+        # naoqi_driver publishes rgb8; convert bgr8 if needed
+        if msg.encoding == "bgr8":
+            arr = bytearray(rgb)
+            for i in range(0, len(arr), 3):
+                arr[i], arr[i + 2] = arr[i + 2], arr[i]
+            rgb = bytes(arr)
+
+        png_bytes = _encode_png(msg.width, msg.height, rgb)
+        image_b64 = base64.b64encode(png_bytes).decode("utf-8")
 
         try:
             resp = requests.post(
                 self._server_url + "/perceive",
-                json={"image": image_b64, "extension": fmt},
+                json={"image": image_b64, "extension": "png"},
                 timeout=15,
             )
             resp.raise_for_status()
@@ -123,12 +143,12 @@ class PepperNode(object):
         self._gesture_pub.publish(String(data=tag))
 
     def _speak(self, text):
-        """Send text to Pepper's TTS via the action server."""
-        goal = SpeechWithFeedbackGoal()
-        goal.say = text
-        self._tts_client.send_goal(goal)
-        self._tts_client.wait_for_result(timeout=rospy.Duration(15.0))
+        """Send text to Pepper's TTS via the /speech topic."""
+        self._speech_pub.publish(String(data=text))
         rospy.loginfo("Pepper said: %s", text)
+        # Wait roughly for speech to finish (avg ~120 words/min)
+        word_count = len(text.split())
+        rospy.sleep(max(1.5, word_count * 0.5))
 
     def run(self):
         """Main interaction loop."""

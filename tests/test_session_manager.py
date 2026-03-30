@@ -67,7 +67,7 @@ def test_positive_label_updates_learner(
     session, learner = _make_session("SL", tmp_logger)
     initial_vs = learner.version_space_size
 
-    session.process_turn("Simon, this is a HOUSE", house_obj)
+    session.process_turn("Pepper, this is a HOUSE", house_obj)
 
     assert learner.version_space_size < initial_vs
     assert learner.labeled_examples_count == 1
@@ -83,7 +83,7 @@ def test_negative_label_updates_learner(
     mock_parser_class.return_value.parse.return_value = {"type": "negative_label"}
     session, learner = _make_session("SL", tmp_logger)
 
-    session.process_turn("Simon, this is not a HOUSE", non_house_obj)
+    session.process_turn("Pepper, this is not a HOUSE", non_house_obj)
 
     assert learner.labeled_examples_count == 1
 
@@ -98,7 +98,7 @@ def test_test_question_returns_answer(
     mock_parser_class.return_value.parse.return_value = {"type": "test_question"}
     session, _ = _make_session("SL", tmp_logger)
 
-    session.process_turn("Simon, is this a HOUSE?", house_obj)
+    session.process_turn("Pepper, is this a HOUSE?", house_obj)
 
     assert len(session.robot_response) > 0
 
@@ -114,7 +114,7 @@ def test_end_session_deactivates(
     session, _ = _make_session("SL", tmp_logger)
     assert session.is_active
 
-    session.process_turn("Simon, we are done", house_obj)
+    session.process_turn("Pepper, we are done", house_obj)
 
     assert not session.is_active
 
@@ -129,7 +129,7 @@ def test_al_mode_issues_query_after_label(
     mock_parser_class.return_value.parse.return_value = {"type": "positive_label"}
     session, _ = _make_session("AL", tmp_logger)
 
-    session.process_turn("Simon, this is a HOUSE", house_obj)
+    session.process_turn("Pepper, this is a HOUSE", house_obj)
 
     assert "replace" in session.robot_response.lower()
 
@@ -146,7 +146,7 @@ def test_log_file_written(
     logger = ExperimentLogger(log_path)
     session, _ = _make_session("SL", logger)
 
-    session.process_turn("Simon, this is a HOUSE", house_obj)
+    session.process_turn("Pepper, this is a HOUSE", house_obj)
 
     assert log_path.exists()
     lines = log_path.read_text().strip().splitlines()

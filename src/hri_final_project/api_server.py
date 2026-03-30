@@ -82,7 +82,7 @@ def turn() -> Response:
     """Process one teaching turn and return the robot response text.
 
     Request JSON:
-        {"utterance": "Simon, this is a HOUSE"}
+        {"utterance": "Pepper, this is a HOUSE"}
 
     Response JSON:
         {"response": "Understood, thank you!",

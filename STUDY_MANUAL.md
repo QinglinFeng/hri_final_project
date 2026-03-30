@@ -40,7 +40,7 @@ Complete these the day before and 30 minutes before each session.
 - [ ] Connect laptop to the same Wi-Fi network as Pepper
 - [ ] Confirm Pepper's IP address: press the chest button once → Pepper says its IP
 - [ ] Launch all three software components (see §3)
-- [ ] Run a test turn: show any two shapes, press ENTER, type "Simon, is this a HOUSE?" → confirm Pepper speaks
+- [ ] Run a test turn: show any two shapes, press ENTER, type "Pepper, is this a HOUSE?" → confirm Pepper speaks
 - [ ] Open WoZ panel and confirm it shows session status
 
 ### Shape Inventory (24 pieces total)
@@ -157,11 +157,11 @@ At the start of each session, I'll tell you the **name** of the concept — like
 
 You can say things like:
 
-- *'Simon, this is a HOUSE.'*
-- *'Simon, this is not a HOUSE.'*
-- *'Simon, is this a HOUSE?'*
-- *'Simon, do you have any questions?'*
-- *'Simon, we're done.'*
+- *'Pepper, this is a HOUSE.'*
+- *'Pepper, this is not a HOUSE.'*
+- *'Pepper, is this a HOUSE?'*
+- *'Pepper, do you have any questions?'*
+- *'Pepper, we're done.'*
 
 Pepper will sometimes ask you to change one of the shapes. When it does, please make that change if you can.
 
@@ -216,10 +216,10 @@ Please pick any two shapes from the tray, place them on the cloth — one on top
 ### 6.3 Ending a Session
 
 The session ends when:
-- **The participant says they are done** (e.g., "Simon, we're done") — type this into Terminal 3
+- **The participant says they are done** (e.g., "Pepper, we're done") — type this into Terminal 3
 - **Or you judge the session is complete** (VS converged to 1, or ~15–20 turns reached)
 
-If you need to end the session yourself, type: `Simon, we are done` in Terminal 3.
+If you need to end the session yourself, type: `Pepper, we are done` in Terminal 3.
 
 > *After Pepper says "Thank you for teaching me!":*
 
@@ -241,7 +241,7 @@ If you need to end the session yourself, type: `Simon, we are done` in Terminal 
 
 ### Handling Unusual Situations
 
-**Participant says something ambiguous (e.g., "Simon, good job"):**
+**Participant says something ambiguous (e.g., "Pepper, good job"):**
 → Type it as-is. If Pepper responds with "Sorry, I didn't understand that," say to the participant: "You can try rephrasing that."
 
 **Participant asks Pepper a question it can't answer:**
@@ -257,7 +257,7 @@ If you need to end the session yourself, type: `Simon, we are done` in Terminal 
 → This is expected. The participant may find this frequent. That's part of the study design. Do not intervene unless they are distressed.
 
 **AQ Mode — robot never asks questions unless invited:**
-→ Remind the participant: "Remember, you can ask Simon if he has any questions."
+→ Remind the participant: "Remember, you can ask Pepper if he has any questions."
 
 ---
 
@@ -350,11 +350,11 @@ Check Terminal 1 output at startup — the order is randomized per subject.
 
 | Situation | What to type |
 |---|---|
-| Positive example | `Simon, this is a HOUSE` |
-| Negative example | `Simon, this is not a HOUSE` |
-| Test question | `Simon, is this a HOUSE?` |
-| Invite question (AQ mode) | `Simon, do you have any questions?` |
-| End session | `Simon, we are done` |
+| Positive example | `Pepper, this is a HOUSE` |
+| Negative example | `Pepper, this is not a HOUSE` |
+| Test question | `Pepper, is this a HOUSE?` |
+| Invite question (AQ mode) | `Pepper, do you have any questions?` |
+| End session | `Pepper, we are done` |
 
 ### Concept Definitions (DO NOT SHARE WITH PARTICIPANT)
 

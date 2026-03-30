@@ -115,6 +115,12 @@ _COMPOUND_OBJECT_PROMPT = (
     "- color: must be exactly one of [pink, green, yellow, orange]\n"
     "- shape: must be exactly one of [circle, triangle, square]\n"
     "- size: must be exactly one of [small, large]\n\n"
+    "Size guidance: there are exactly two sizes in this set — small and large."
+    " The large shapes (squares, triangles, circles) are roughly twice as big as"
+    " the small ones. For triangles specifically: a LARGE triangle has a base"
+    " and height similar in length to the side of a large square. A SMALL triangle is clearly"
+    " much smaller. Do NOT default to small — if the triangle fills a noticeable"
+    " area of the tablecloth, it is LARGE.\n\n"
     "Return your answer ONLY as a JSON object in this exact format, with no"
     " explanation or extra text:\n\n"
     '{\n  "top": {\n    "color": "",\n    "shape": "",\n    "size": ""\n  },\n'

@@ -33,10 +33,10 @@ def main() -> None:
         print(f"\n{'=' * 60}")
         print(f"  Starting session: {session._concept_name} [{session._mode_name}]")  # noqa: SLF001
         print("  Type teacher utterances. Example:")
-        print("    'Simon, this is a HOUSE'")
-        print("    'Simon, is this a HOUSE?'")
-        print("    'Simon, do you have any questions?'")
-        print("    'Simon, we are done'")
+        print("    'Pepper, this is a HOUSE'")
+        print("    'Pepper, is this a HOUSE?'")
+        print("    'Pepper, do you have any questions?'")
+        print("    'Pepper, we are done'")
         print("=" * 60)
 
         while session.is_active:
