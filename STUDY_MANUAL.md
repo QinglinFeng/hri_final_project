@@ -60,7 +60,7 @@ Complete these the day before and 30 minutes before each session.
                     [ Pepper ]
                         |
           ┌─────────────────────────┐
-          │   black tablecloth      │
+          │   black paper.          │
           │   [ top shape ]         │
           │   [ bottom shape ]      │
           └─────────────────────────┘
@@ -74,7 +74,7 @@ Complete these the day before and 30 minutes before each session.
 ```
 
 **Key positioning notes:**
-- Pepper's camera looks straight ahead — the two shapes must be placed flat on the table, clearly visible, one above the other (top = farther from participant, bottom = closer to participant)
+- Pepper's camera looks down on the chair — the two shapes must be placed flat on the table, clearly visible, one above the other (top = farther from Pepper, bottom = closer to Pepper)
 - Experimenter sits where they can see both the participant and the laptop screen, but are not in Pepper's camera view
 
 ---
@@ -147,7 +147,7 @@ Do you have any questions before we begin?"
 
 **EXPERIMENTER:**
 
-"In front of you, you'll see a black tablecloth. During the study, you'll place two paper shape cutouts on it — one on top and one on the bottom, like this."
+"In front of you, you'll see a black paper. During the study, you'll place two paper shape cutouts on it — one on top and one on the bottom, like this."
 
 > *Demonstrate by placing a pink triangle (top) and a green square (bottom) on the cloth.*
 

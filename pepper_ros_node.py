@@ -169,6 +169,35 @@ class PepperNode(object):
                 )
             )
 
+            # ── Step 1b: optional perception correction ────────────────────
+            correction = input(
+                "Correct? ENTER=accept  or  <color> <shape> <size> / <color> <shape> <size>: "
+            ).strip()
+            if correction:
+                parts = [p.strip().split() for p in correction.split("/")]
+                if len(parts) == 2 and len(parts[0]) == 3 and len(parts[1]) == 3:
+                    fix = {
+                        "color_top": parts[0][0], "shape_top": parts[0][1],
+                        "size_top": parts[0][2],
+                        "color_bottom": parts[1][0], "shape_bottom": parts[1][1],
+                        "size_bottom": parts[1][2],
+                    }
+                    try:
+                        resp = requests.post(
+                            self._server_url + "/correct", json=fix, timeout=5
+                        )
+                        resp.raise_for_status()
+                        perceived = resp.json()
+                        print(
+                            "[Corrected]  top: {color_top}, {shape_top}, {size_top}"
+                            "  |  bottom: {color_bottom}, {shape_bottom},"
+                            " {size_bottom}".format(**perceived)
+                        )
+                    except requests.RequestException as e:
+                        rospy.logerr("Correction request failed: %s", e)
+                else:
+                    print("[Warning] Invalid format — keeping original perception.")
+
             # ── Step 2: experimenter types the teacher's utterance ─────────
             utterance = input("Teacher says: ").strip()
             if not utterance:

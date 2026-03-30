@@ -77,6 +77,33 @@ def perceive() -> Response:
     return jsonify(obj.to_dict())
 
 
+@app.post("/correct")
+def correct() -> Response:
+    """Override the current perceived object with a manual correction.
+
+    Request JSON:
+        {"color_top": "pink", "shape_top": "triangle", "size_top": "large",
+         "color_bottom": "green", "shape_bottom": "square", "size_bottom": "large"}
+    """
+    global _current_object  # noqa: PLW0603
+    data: dict[str, Any] = request.get_json(force=True)
+    _current_object = CompoundObject(
+        color_top=data["color_top"],
+        shape_top=data["shape_top"],
+        size_top=data["size_top"],
+        color_bottom=data["color_bottom"],
+        shape_bottom=data["shape_bottom"],
+        size_bottom=data["size_bottom"],
+    )
+    print(
+        f"\n[Correction]  top: {_current_object.color_top},"
+        f" {_current_object.shape_top}, {_current_object.size_top}"
+        f"  |  bottom: {_current_object.color_bottom},"
+        f" {_current_object.shape_bottom}, {_current_object.size_bottom}"
+    )
+    return jsonify(_current_object.to_dict())
+
+
 @app.post("/turn")
 def turn() -> Response:
     """Process one teaching turn and return the robot response text.

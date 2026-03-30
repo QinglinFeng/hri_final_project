@@ -54,7 +54,16 @@ wrap-descriptions = 88
 strict_equality = true
 disallow_untyped_calls = true
 warn_unreachable = true
-exclude = ["venv/*", ".venv/*", "pepper_ros_node.py", "woz_panel.py"]
+exclude = [
+    "venv/*",
+    ".venv/*",
+    "pepper_ros_node.py",
+    "woz_panel.py",
+    "grab_test_frame.py",
+    "teleop.py",
+    "teleop_simple.py",
+    "docker/camera_keepalive.py",
+]
 
 [[tool.mypy.overrides]]
 module = [
