@@ -101,15 +101,17 @@ python woz_panel.py
 ```
 > ✅ Ready when you see the dashboard with concept name and version space size.
 
-### Terminal 3 — ROS + Pepper
+### Terminal 3 — ROS + Pepper (Docker)
 ```bash
-source /opt/ros/noetic/setup.bash
-roslaunch naoqi_driver naoqi_driver.launch nao_ip:=<PEPPER_IP>
+cd /path/to/hri_final_project
+./docker/start_ros.sh <PEPPER_IP>
 ```
-> Open a 4th terminal for the ROS node:
+> ✅ Ready when you see: `naoqi_driver initialized` and `[camera_keepalive] First frame received`
+
+### Terminal 4 — Pepper ROS Node
 ```bash
-source /opt/ros/noetic/setup.bash
-python pepper_ros_node.py --server http://localhost:5000
+cd /path/to/hri_final_project
+./docker/start_pepper_node.sh
 ```
 > ✅ Ready when you see: `[Press ENTER when the object is in view]`
 

@@ -175,6 +175,12 @@ class PepperNode(object):
             ).strip()
             if correction:
                 parts = [p.strip().split() for p in correction.split("/")]
+                # Also accept 6 space-separated tokens with no slash
+                if "/" not in correction:
+                    tokens = correction.split()
+                    if len(tokens) == 6:
+                        correction = " ".join(tokens[:3]) + " / " + " ".join(tokens[3:])
+                        parts = [p.strip().split() for p in correction.split("/")]
                 if len(parts) == 2 and len(parts[0]) == 3 and len(parts[1]) == 3:
                     fix = {
                         "color_top": parts[0][0], "shape_top": parts[0][1],
