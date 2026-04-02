@@ -1,4 +1,7 @@
-"""Version space learner as described in Algorithm 1 of Cakmak et al. (2010)."""
+"""Version space learner as described in Algorithm 1 of Cakmak et al.
+
+(2010).
+"""
 
 from itertools import product
 from typing import Optional
@@ -21,13 +24,11 @@ def _generate_hypothesis_space() -> list[Hypothesis]:
     feature_options = []
     for feature, values in FEATURE_VALUES.items():
         # Each feature can be WILDCARD or any of its values
-        feature_options.append(
-            [(feature, WILDCARD)] + [(feature, v) for v in values]
-        )
+        feature_options.append([(feature, WILDCARD)] + [(feature, v) for v in values])
 
     hypotheses = []
     for combo in product(*feature_options):
-        h: Hypothesis = {feat: val for feat, val in combo}
+        h: Hypothesis = dict(combo)
         hypotheses.append(h)
     return hypotheses
 
@@ -171,9 +172,7 @@ class VersionSpaceLearner:
             return best
 
         # Fallback: allow any object
-        all_candidates = [
-            obj for obj in self._instance_space if obj != current_example
-        ]
+        all_candidates = [obj for obj in self._instance_space if obj != current_example]
         return _find_best_split(all_candidates, vs, n)
 
     @property

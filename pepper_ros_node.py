@@ -24,9 +24,9 @@ import struct
 import zlib
 
 import requests
-import rospy
-from sensor_msgs.msg import Image
-from std_msgs.msg import String
+import rospy  # pylint: disable=import-error
+from sensor_msgs.msg import Image  # pylint: disable=import-error
+from std_msgs.msg import String  # pylint: disable=import-error
 
 
 def _encode_png(width, height, rgb_data):
@@ -34,18 +34,25 @@ def _encode_png(width, height, rgb_data):
 
     def chunk(tag, data):
         c = tag + data
-        return struct.pack(">I", len(data)) + c + struct.pack(">I", zlib.crc32(c) & 0xFFFFFFFF)
+        return (
+            struct.pack(">I", len(data))
+            + c
+            + struct.pack(">I", zlib.crc32(c) & 0xFFFFFFFF)
+        )
 
     ihdr = chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
-    raw = b"".join(b"\x00" + rgb_data[y * width * 3:(y + 1) * width * 3] for y in range(height))
+    raw = b"".join(
+        b"\x00" + rgb_data[y * width * 3 : (y + 1) * width * 3] for y in range(height)
+    )
     idat = chunk(b"IDAT", zlib.compress(raw))
     iend = chunk(b"IEND", b"")
     return b"\x89PNG\r\n\x1a\n" + ihdr + idat + iend
 
+
 SERVER_URL = "http://localhost:5000"
 
 
-class PepperNode(object):
+class PepperNode:
     """ROS node that connects Pepper to the HRI experiment API server."""
 
     def __init__(self, server_url):
@@ -163,15 +170,15 @@ class PepperNode(object):
                 continue
 
             print(
-                "[Perceived]  top: {color_top}, {shape_top}, {size_top}"
-                "  |  bottom: {color_bottom}, {shape_bottom}, {size_bottom}".format(
-                    **perceived
-                )
+                f"[Perceived]  top: {perceived['color_top']}, {perceived['shape_top']},"
+                f" {perceived['size_top']}  |  bottom: {perceived['color_bottom']},"
+                f" {perceived['shape_bottom']}, {perceived['size_bottom']}"
             )
 
             # ── Step 1b: optional perception correction ────────────────────
             correction = input(
-                "Correct? ENTER=accept  or  <color> <shape> <size> / <color> <shape> <size>: "
+                "Correct? ENTER=accept  or  "
+                "<color> <shape> <size> / <color> <shape> <size>: "
             ).strip()
             if correction:
                 parts = [p.strip().split() for p in correction.split("/")]
@@ -183,9 +190,11 @@ class PepperNode(object):
                         parts = [p.strip().split() for p in correction.split("/")]
                 if len(parts) == 2 and len(parts[0]) == 3 and len(parts[1]) == 3:
                     fix = {
-                        "color_top": parts[0][0], "shape_top": parts[0][1],
+                        "color_top": parts[0][0],
+                        "shape_top": parts[0][1],
                         "size_top": parts[0][2],
-                        "color_bottom": parts[1][0], "shape_bottom": parts[1][1],
+                        "color_bottom": parts[1][0],
+                        "shape_bottom": parts[1][1],
                         "size_bottom": parts[1][2],
                     }
                     try:
@@ -195,9 +204,10 @@ class PepperNode(object):
                         resp.raise_for_status()
                         perceived = resp.json()
                         print(
-                            "[Corrected]  top: {color_top}, {shape_top}, {size_top}"
-                            "  |  bottom: {color_bottom}, {shape_bottom},"
-                            " {size_bottom}".format(**perceived)
+                            f"[Corrected]  top: {perceived['color_top']},"
+                            f" {perceived['shape_top']}, {perceived['size_top']}"
+                            f"  |  bottom: {perceived['color_bottom']},"
+                            f" {perceived['shape_bottom']}, {perceived['size_bottom']}"
                         )
                     except requests.RequestException as e:
                         rospy.logerr("Correction request failed: %s", e)
@@ -232,7 +242,7 @@ class PepperNode(object):
                 rospy.loginfo("Session ended. Moving to next session.")
 
 
-def main():
+def main() -> None:  # pylint: disable=missing-function-docstring
     parser = argparse.ArgumentParser(description="Pepper ROS 1 node for HRI experiment")
     parser.add_argument(
         "--server",
@@ -242,7 +252,7 @@ def main():
     # rospy uses remapping args; strip them before parsing
     args, _ = parser.parse_known_args()
 
-    global SERVER_URL
+    global SERVER_URL  # pylint: disable=global-statement
     SERVER_URL = args.server
 
     node = PepperNode(server_url=args.server)

@@ -7,8 +7,12 @@ from hri_final_project.version_space import VersionSpaceLearner
 
 def _obj(ct: str, st: str, sit: str, cb: str, sb: str, sib: str) -> CompoundObject:
     return CompoundObject(
-        color_top=ct, shape_top=st, size_top=sit,
-        color_bottom=cb, shape_bottom=sb, size_bottom=sib,
+        color_top=ct,
+        shape_top=st,
+        size_top=sit,
+        color_bottom=cb,
+        shape_bottom=sb,
+        size_bottom=sib,
     )
 
 
@@ -44,8 +48,12 @@ def test_al_no_query_when_converged() -> None:
     learner = VersionSpaceLearner(true_concept="HOUSE")
     # Flood with enough examples to converge
     for _ in range(30):
-        learner.update(_obj("pink", "triangle", "small", "green", "square", "large"), True)
-        learner.update(_obj("green", "circle", "small", "orange", "circle", "large"), False)
+        learner.update(
+            _obj("pink", "triangle", "small", "green", "square", "large"), True
+        )
+        learner.update(
+            _obj("green", "circle", "small", "orange", "circle", "large"), False
+        )
     current = _obj("pink", "triangle", "small", "orange", "circle", "small")
     mode = ALMode(learner)
     # If VS size is 1, no query should be returned
@@ -58,7 +66,9 @@ def test_mi_queries_on_uninformative_example() -> None:
     learner = VersionSpaceLearner(true_concept="HOUSE")
     # Converge VS enough that some objects become uninformative
     for _ in range(10):
-        learner.update(_obj("pink", "triangle", "small", "green", "square", "large"), True)
+        learner.update(
+            _obj("pink", "triangle", "small", "green", "square", "large"), True
+        )
     mode = MIMode(learner)
     # The same object again is likely uninformative now
     current = _obj("pink", "triangle", "small", "green", "square", "large")
@@ -88,8 +98,12 @@ def test_aq_returns_none_when_converged() -> None:
     """AQ mode returns None from on_any_questions() when VS has converged."""
     learner = VersionSpaceLearner(true_concept="HOUSE")
     for _ in range(30):
-        learner.update(_obj("pink", "triangle", "small", "green", "square", "large"), True)
-        learner.update(_obj("green", "circle", "small", "orange", "circle", "large"), False)
+        learner.update(
+            _obj("pink", "triangle", "small", "green", "square", "large"), True
+        )
+        learner.update(
+            _obj("green", "circle", "small", "orange", "circle", "large"), False
+        )
     current = _obj("pink", "triangle", "small", "orange", "circle", "small")
     mode = AQMode(learner)
     if learner.version_space_size == 1:

@@ -45,6 +45,7 @@ def _get_session() -> SessionManager:
 # Endpoints
 # ---------------------------------------------------------------------------
 
+
 @app.post("/perceive")
 def perceive() -> Response:
     """Receive a base64-encoded image from Pepper and return a CompoundObject.
@@ -56,7 +57,7 @@ def perceive() -> Response:
         {"color_top": ..., "shape_top": ..., "size_top": ...,
          "color_bottom": ..., "shape_bottom": ..., "size_bottom": ...}
     """
-    global _current_object  # noqa: PLW0603
+    global _current_object  # noqa: PLW0603  # pylint: disable=global-statement
     data: dict[str, Any] = request.get_json(force=True)
     image_b64: str = data["image"]
     extension: str = data.get("extension", "png")
@@ -85,7 +86,7 @@ def correct() -> Response:
         {"color_top": "pink", "shape_top": "triangle", "size_top": "large",
          "color_bottom": "green", "shape_bottom": "square", "size_bottom": "large"}
     """
-    global _current_object  # noqa: PLW0603
+    global _current_object  # noqa: PLW0603  # pylint: disable=global-statement
     data: dict[str, Any] = request.get_json(force=True)
     _current_object = CompoundObject(
         color_top=data["color_top"],
@@ -116,7 +117,7 @@ def turn() -> Response:
          "session_active": true,
          "vs_size": 42}
     """
-    global _session, _last_utterance, _last_response  # noqa: PLW0603
+    global _session, _last_utterance, _last_response  # noqa: PLW0603  # pylint: disable=global-statement
     session = _get_session()
 
     if _current_object is None:
@@ -137,47 +138,57 @@ def turn() -> Response:
         next_session = _runner.start_next_session()
         if next_session is not None:
             _session = next_session
-            print(f"\n[Server] Starting next session: "
-                  f"{next_session._concept_name} [{next_session._mode_name}]")  # noqa: SLF001
+            print(
+                f"\n[Server] Starting next session: "
+                f"{next_session._concept_name} [{next_session._mode_name}]"  # pylint: disable=protected-access
+            )  # noqa: SLF001
         else:
             print("\n[Server] Experiment complete.")
 
-    return jsonify({
-        "response": session.robot_response,
-        "session_active": session.is_active,
-        "vs_size": session._learner.version_space_size,  # noqa: SLF001
-    })
+    return jsonify(
+        {
+            "response": session.robot_response,
+            "session_active": session.is_active,
+            "vs_size": session._learner.version_space_size,  # noqa: SLF001  # pylint: disable=protected-access
+        }
+    )
 
 
 @app.get("/status")
 def status() -> Response:
     """Return current session status for the WoZ panel."""
+    # pylint: disable=protected-access
     if _session is None:
         return jsonify({"status": "no session"})
     f1 = _session._learner.current_accuracy  # noqa: SLF001
-    return jsonify({
-        "concept": _session._concept_name,  # noqa: SLF001
-        "mode": _session._mode_name,  # noqa: SLF001
-        "vs_size": _session._learner.version_space_size,  # noqa: SLF001
-        "examples": _session._learner.labeled_examples_count,  # noqa: SLF001
-        "active": _session.is_active,
-        "f1": f1,
-        "last_utterance": _last_utterance,
-        "last_response": _last_response,
-    })
+    return jsonify(
+        {
+            "concept": _session._concept_name,  # noqa: SLF001
+            "mode": _session._mode_name,  # noqa: SLF001
+            "vs_size": _session._learner.version_space_size,  # noqa: SLF001
+            "examples": _session._learner.labeled_examples_count,  # noqa: SLF001
+            "active": _session.is_active,
+            "f1": f1,
+            "last_utterance": _last_utterance,
+            "last_response": _last_response,
+        }
+    )
 
 
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Start the API server."""
-    global _runner, _session  # noqa: PLW0603
+    global _runner, _session  # noqa: PLW0603  # pylint: disable=global-statement
 
     parser = argparse.ArgumentParser(description="HRI experiment API server")
     parser.add_argument("--subject", required=True, help="Subject ID")
-    parser.add_argument("--host", default="0.0.0.0", help="Host to bind (default: 0.0.0.0)")
+    parser.add_argument(
+        "--host", default="0.0.0.0", help="Host to bind (default: 0.0.0.0)"
+    )
     parser.add_argument("--port", type=int, default=5000, help="Port (default: 5000)")
     args = parser.parse_args()
 
@@ -186,8 +197,10 @@ def main() -> None:
 
     if _session is not None:
         print(f"[Server] Subject: {args.subject}")
-        print(f"[Server] First session: {_session._concept_name} "  # noqa: SLF001
-              f"[{_session._mode_name}]")  # noqa: SLF001
+        print(
+            f"[Server] First session: {_session._concept_name} "  # noqa: SLF001  # pylint: disable=protected-access
+            f"[{_session._mode_name}]"
+        )  # noqa: SLF001  # pylint: disable=protected-access
         print(f"[Server] Listening on http://{args.host}:{args.port}")
 
     app.run(host=args.host, port=args.port, debug=False)

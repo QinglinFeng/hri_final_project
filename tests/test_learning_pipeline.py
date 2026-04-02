@@ -17,7 +17,6 @@ from hri_final_project.compound_object import (
 )
 from hri_final_project.version_space import CONCEPTS, VersionSpaceLearner
 
-
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 
@@ -31,8 +30,8 @@ def _teach_with_random_examples(
 ) -> VersionSpaceLearner:
     """Teach a learner with stratified random examples (half pos, half neg).
 
-    Pure random sampling almost never hits positives for sparse concepts like
-    HOUSE (~3% of instances), so we explicitly balance the sample.
+    Pure random sampling almost never hits positives for sparse concepts like HOUSE (~3%
+    of instances), so we explicitly balance the sample.
     """
     rng = random.Random(seed)
     space = generate_instance_space()
@@ -52,9 +51,7 @@ def _teach_with_random_examples(
     return learner
 
 
-def _teach_with_active_queries(
-    concept: str, n_examples: int
-) -> VersionSpaceLearner:
+def _teach_with_active_queries(concept: str, n_examples: int) -> VersionSpaceLearner:
     """Teach a learner using active learning (query-by-committee)."""
     space = generate_instance_space()
     learner = VersionSpaceLearner(true_concept=concept)
@@ -154,10 +151,10 @@ def test_all_concepts_learn() -> None:
 def test_active_learning_shrinks_vs_faster() -> None:
     """Active learning should shrink the VS faster than passive labeling.
 
-    Both learners receive the same first positive example. The active learner
-    then picks queries that maximally split the VS; the passive learner just
-    receives the same objects in a fixed order. After 10 total examples the
-    active learner should have a smaller or equal VS.
+    Both learners receive the same first positive example. The active learner then picks
+    queries that maximally split the VS; the passive learner just receives the same
+    objects in a fixed order. After 10 total examples the active learner should have a
+    smaller or equal VS.
     """
     concept = "HOUSE"
     space = generate_instance_space()
@@ -220,7 +217,7 @@ def test_query_always_differs_by_one_piece() -> None:
         learner.update(obj, _label(obj, "SNOWMAN"))
         query = learner.get_best_query(current)
         if query is not None:
-            assert current.differs_by_one_piece(query), (
-                f"Query does not differ by one piece from current"
-            )
+            assert current.differs_by_one_piece(
+                query
+            ), "Query does not differ by one piece from current"
         current = obj

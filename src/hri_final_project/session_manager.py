@@ -25,7 +25,8 @@ def _query_to_text(current: CompoundObject, query: CompoundObject) -> str:
 
 
 class SessionManager:
-    """Manages one teaching session for a single concept in a single interaction mode."""
+    """Manages one teaching session for a single concept in a single interaction
+    mode."""
 
     def __init__(
         self,
@@ -62,9 +63,7 @@ class SessionManager:
         """True while the session is ongoing."""
         return self._active
 
-    def process_turn(
-        self, utterance: str, current_object: CompoundObject
-    ) -> None:
+    def process_turn(self, utterance: str, current_object: CompoundObject) -> None:
         """Process one teacher turn.
 
         Args:

@@ -12,7 +12,7 @@ from hri_final_project.perception_ClaudeAPI import MoonDreamPerception
 PROMPT = (
     "You are a vision system for a robot experiment. In the image, there are"
     " exactly two paper cutout shapes placed in a demonstration area on a black"
-    ' tablecloth. One shape is on top and one is on the bottom from the robot\'s'
+    " tablecloth. One shape is on top and one is on the bottom from the robot's"
     ' perspective (i.e., the shape closer to the back of the table is "top" and'
     ' the shape closer to the front of the table is "bottom").\n\n'
     "For each shape, identify:\n"

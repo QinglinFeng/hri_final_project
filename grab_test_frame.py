@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Quick test: grab one frame from Pepper's front camera via ROS and save it."""
-import rospy
-from sensor_msgs.msg import Image
+
+import rospy  # pylint: disable=import-error
+from sensor_msgs.msg import Image  # pylint: disable=import-error
 
 rospy.init_node("grab_test", anonymous=True)
 print("Waiting for camera frame on /naoqi_driver/camera/front/image_raw ...")
@@ -23,5 +24,5 @@ with open("/workspace/test_frame.ppm", "wb") as f:
     f.write(f"P6\n{msg.width} {msg.height}\n255\n".encode())
     f.write(bytes(data))
 
-print(f"Saved to /workspace/test_frame.ppm")
+print("Saved to /workspace/test_frame.ppm")
 print("Open it on your Mac with: open test_frame.ppm")

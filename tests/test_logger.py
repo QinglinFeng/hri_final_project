@@ -17,8 +17,12 @@ def _make_obj(
     sib: str = "large",
 ) -> CompoundObject:
     return CompoundObject(
-        color_top=ct, shape_top=st, size_top=sit,
-        color_bottom=cb, shape_bottom=sb, size_bottom=sib,
+        color_top=ct,
+        shape_top=st,
+        size_top=sit,
+        color_bottom=cb,
+        shape_bottom=sb,
+        size_bottom=sib,
     )
 
 
@@ -34,11 +38,17 @@ def test_log_creates_file() -> None:
         assert not log_path.exists()
 
         logger.log(
-            subject_id="p01", mode="SL", concept="HOUSE",
-            interaction_step=1, current_example=_make_obj(),
-            sentence_type="positive_label", current_label=True,
-            answer_type="acknowledge", query=None,
-            version_space_size=3600, is_informative=True,
+            subject_id="p01",
+            mode="SL",
+            concept="HOUSE",
+            interaction_step=1,
+            current_example=_make_obj(),
+            sentence_type="positive_label",
+            current_label=True,
+            answer_type="acknowledge",
+            query=None,
+            version_space_size=3600,
+            is_informative=True,
         )
         assert log_path.exists()
 
@@ -49,11 +59,17 @@ def test_log_writes_valid_json() -> None:
         log_path = Path(tmp) / "test.jsonl"
         logger = ExperimentLogger(log_path)
         logger.log(
-            subject_id="p01", mode="SL", concept="HOUSE",
-            interaction_step=1, current_example=_make_obj(),
-            sentence_type="positive_label", current_label=True,
-            answer_type="acknowledge", query=None,
-            version_space_size=3600, is_informative=True,
+            subject_id="p01",
+            mode="SL",
+            concept="HOUSE",
+            interaction_step=1,
+            current_example=_make_obj(),
+            sentence_type="positive_label",
+            current_label=True,
+            answer_type="acknowledge",
+            query=None,
+            version_space_size=3600,
+            is_informative=True,
         )
         records = _read_log(log_path)
         assert len(records) == 1
@@ -62,20 +78,34 @@ def test_log_writes_valid_json() -> None:
 def test_log_contains_required_fields() -> None:
     """Each record should contain all required fields."""
     required = {
-        "subject_id", "mode", "concept", "system_time",
-        "interaction_step", "current_example", "sentence_type",
-        "current_label", "answer_type", "query",
-        "version_space_size", "is_informative",
+        "subject_id",
+        "mode",
+        "concept",
+        "system_time",
+        "interaction_step",
+        "current_example",
+        "sentence_type",
+        "current_label",
+        "answer_type",
+        "query",
+        "version_space_size",
+        "is_informative",
     }
     with tempfile.TemporaryDirectory() as tmp:
         log_path = Path(tmp) / "test.jsonl"
         logger = ExperimentLogger(log_path)
         logger.log(
-            subject_id="p01", mode="AL", concept="SNOWMAN",
-            interaction_step=3, current_example=_make_obj(),
-            sentence_type="test_question", current_label=None,
-            answer_type="answer", query=None,
-            version_space_size=100, is_informative=False,
+            subject_id="p01",
+            mode="AL",
+            concept="SNOWMAN",
+            interaction_step=3,
+            current_example=_make_obj(),
+            sentence_type="test_question",
+            current_label=None,
+            answer_type="answer",
+            query=None,
+            version_space_size=100,
+            is_informative=False,
         )
         record = _read_log(log_path)[0]
         assert required.issubset(record.keys())
@@ -88,11 +118,17 @@ def test_log_appends_multiple_entries() -> None:
         logger = ExperimentLogger(log_path)
         for i in range(5):
             logger.log(
-                subject_id="p01", mode="MI", concept="ALIEN",
-                interaction_step=i, current_example=_make_obj(),
-                sentence_type="positive_label", current_label=True,
-                answer_type="acknowledge", query=None,
-                version_space_size=3600 - i * 100, is_informative=True,
+                subject_id="p01",
+                mode="MI",
+                concept="ALIEN",
+                interaction_step=i,
+                current_example=_make_obj(),
+                sentence_type="positive_label",
+                current_label=True,
+                answer_type="acknowledge",
+                query=None,
+                version_space_size=3600 - i * 100,
+                is_informative=True,
             )
         records = _read_log(log_path)
         assert len(records) == 5
@@ -106,11 +142,17 @@ def test_log_query_serialized_correctly() -> None:
         logger = ExperimentLogger(log_path)
         query_obj = _make_obj(ct="orange", st="circle")
         logger.log(
-            subject_id="p01", mode="AL", concept="HOUSE",
-            interaction_step=2, current_example=_make_obj(),
-            sentence_type="positive_label", current_label=True,
-            answer_type="query", query=query_obj,
-            version_space_size=500, is_informative=True,
+            subject_id="p01",
+            mode="AL",
+            concept="HOUSE",
+            interaction_step=2,
+            current_example=_make_obj(),
+            sentence_type="positive_label",
+            current_label=True,
+            answer_type="query",
+            query=query_obj,
+            version_space_size=500,
+            is_informative=True,
         )
         record = _read_log(log_path)[0]
         assert isinstance(record["query"], dict)
@@ -124,11 +166,17 @@ def test_log_null_query_serialized_as_none() -> None:
         log_path = Path(tmp) / "test.jsonl"
         logger = ExperimentLogger(log_path)
         logger.log(
-            subject_id="p01", mode="SL", concept="HOUSE",
-            interaction_step=1, current_example=_make_obj(),
-            sentence_type="positive_label", current_label=True,
-            answer_type="acknowledge", query=None,
-            version_space_size=3600, is_informative=True,
+            subject_id="p01",
+            mode="SL",
+            concept="HOUSE",
+            interaction_step=1,
+            current_example=_make_obj(),
+            sentence_type="positive_label",
+            current_label=True,
+            answer_type="acknowledge",
+            query=None,
+            version_space_size=3600,
+            is_informative=True,
         )
         record = _read_log(log_path)[0]
         assert record["query"] is None
@@ -140,10 +188,16 @@ def test_log_creates_parent_directories() -> None:
         log_path = Path(tmp) / "a" / "b" / "c" / "test.jsonl"
         logger = ExperimentLogger(log_path)
         logger.log(
-            subject_id="p01", mode="AQ", concept="ICE CREAM",
-            interaction_step=1, current_example=_make_obj(),
-            sentence_type="end_session", current_label=None,
-            answer_type=None, query=None,
-            version_space_size=1, is_informative=False,
+            subject_id="p01",
+            mode="AQ",
+            concept="ICE CREAM",
+            interaction_step=1,
+            current_example=_make_obj(),
+            sentence_type="end_session",
+            current_label=None,
+            answer_type=None,
+            query=None,
+            version_space_size=1,
+            is_informative=False,
         )
         assert log_path.exists()

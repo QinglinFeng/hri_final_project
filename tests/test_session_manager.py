@@ -2,7 +2,6 @@
 
 # pylint: disable=redefined-outer-name
 from pathlib import Path
-from typing import Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -16,23 +15,30 @@ from hri_final_project.version_space import VersionSpaceLearner
 
 def _obj(ct: str, st: str, sit: str, cb: str, sb: str, sib: str) -> CompoundObject:
     return CompoundObject(
-        color_top=ct, shape_top=st, size_top=sit,
-        color_bottom=cb, shape_bottom=sb, size_bottom=sib,
+        color_top=ct,
+        shape_top=st,
+        size_top=sit,
+        color_bottom=cb,
+        shape_bottom=sb,
+        size_bottom=sib,
     )
 
 
 @pytest.fixture
 def tmp_logger(tmp_path: Path) -> ExperimentLogger:
+    """Create a temporary logger for tests."""
     return ExperimentLogger(tmp_path / "test.jsonl")
 
 
 @pytest.fixture
 def house_obj() -> CompoundObject:
+    """Return a compound object matching the HOUSE concept."""
     return _obj("pink", "triangle", "small", "green", "square", "large")
 
 
 @pytest.fixture
 def non_house_obj() -> CompoundObject:
+    """Return a compound object that does not match the HOUSE concept."""
     return _obj("green", "circle", "small", "orange", "circle", "large")
 
 
@@ -155,7 +161,7 @@ def test_log_file_written(
 
 @patch("hri_final_project.session_manager.TeacherUtteranceParser")
 def test_status_line_format(
-    mock_parser_class: MagicMock,
+    mock_parser_class: MagicMock,  # pylint: disable=unused-argument
     tmp_logger: ExperimentLogger,
 ) -> None:
     """Status line should contain mode, concept, vs_size, examples."""

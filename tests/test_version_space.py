@@ -8,9 +8,7 @@ from hri_final_project.compound_object import (
 from hri_final_project.version_space import CONCEPTS, VersionSpaceLearner
 
 
-def _make_obj(
-    ct: str, st: str, sit: str, cb: str, sb: str, sib: str
-) -> CompoundObject:
+def _make_obj(ct: str, st: str, sit: str, cb: str, sb: str, sib: str) -> CompoundObject:
     return CompoundObject(
         color_top=ct,
         shape_top=st,
@@ -29,7 +27,9 @@ def test_instance_space_size() -> None:
 
 def test_hypothesis_space_size() -> None:
     """Hypothesis space should contain 3600 hypotheses."""
-    from hri_final_project.version_space import _generate_hypothesis_space  # noqa: PLC0415
+    from hri_final_project.version_space import (  # noqa: PLC0415  # pylint: disable=import-outside-toplevel
+        _generate_hypothesis_space,
+    )
 
     hs = _generate_hypothesis_space()
     assert len(hs) == 3600

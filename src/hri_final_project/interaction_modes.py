@@ -1,4 +1,7 @@
-"""Interaction mode implementations from Cakmak et al. (2010)."""
+"""Interaction mode implementations from Cakmak et al.
+
+(2010).
+"""
 
 from abc import ABC, abstractmethod
 from typing import Optional
@@ -54,14 +57,15 @@ class ALMode(InteractionMode):
 
 
 class MIMode(InteractionMode):
-    """Mixed Initiative: queries when uninformative or instance space mostly uninformative."""
+    """Mixed Initiative: queries when uninformative or the instance space is mostly uninformative."""  # pylint: disable=line-too-long
 
     _UNINFORMATIVE_THRESHOLD = 0.8
 
     def on_label_received(
         self, label: bool, compound_obj: CompoundObject
     ) -> Optional[CompoundObject]:
-        """Query if the received example was uninformative, or >80% of space is uninformative."""
+        """Query if the received example was uninformative, or >80% of space is
+        uninformative."""
         # Check if this example was uninformative (post-update check)
         example_uninformative = not self._learner.is_informative(compound_obj)
 
@@ -90,7 +94,7 @@ class AQMode(InteractionMode):
         return None
 
     def on_any_questions(self, current_obj: CompoundObject) -> Optional[CompoundObject]:
-        """Trigger a query when the teacher says 'do you have any questions?'
+        """Trigger a query when the teacher says 'do you have any questions?'.
 
         Args:
             current_obj: The currently displayed compound object.

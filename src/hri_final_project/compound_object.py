@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 from itertools import product
-from typing import Any
 
 COLORS: tuple[str, ...] = ("pink", "green", "yellow", "orange")
 SHAPES: tuple[str, ...] = ("square", "triangle", "circle")
@@ -99,8 +98,8 @@ def generate_instance_space() -> list[CompoundObject]:
 def matches_hypothesis(obj: CompoundObject, hypothesis: dict[str, str]) -> bool:
     """Return True if obj satisfies all constraints in the hypothesis.
 
-    A hypothesis is a dict mapping feature names to required values.
-    Missing features (or WILDCARD values) are unconstrained.
+    A hypothesis is a dict mapping feature names to required values. Missing features
+    (or WILDCARD values) are unconstrained.
     """
     obj_dict = obj.to_dict()
     for feature, value in hypothesis.items():

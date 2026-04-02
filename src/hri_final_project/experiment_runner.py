@@ -5,7 +5,13 @@ from itertools import permutations
 from pathlib import Path
 from typing import Optional
 
-from hri_final_project.interaction_modes import ALMode, AQMode, InteractionMode, MIMode, SLMode
+from hri_final_project.interaction_modes import (
+    ALMode,
+    AQMode,
+    InteractionMode,
+    MIMode,
+    SLMode,
+)
 from hri_final_project.logger import ExperimentLogger
 from hri_final_project.session_manager import SessionManager
 from hri_final_project.version_space import VersionSpaceLearner
@@ -102,13 +108,15 @@ class ExperimentRunner:
         )
         print("-" * 70)
         for s in self._sessions:
+            # pylint: disable=protected-access
             f1 = s._learner.current_accuracy  # noqa: SLF001
             vs_size = s._learner.version_space_size  # noqa: SLF001
+            # pylint: enable=protected-access
             converged = vs_size == 1
             f1_str = f"{f1:.3f}" if f1 is not None else "N/A"
             print(
-                f"{s._mode_name:<6} {s._concept_name:<12} "  # noqa: SLF001
-                f"{s._learner.labeled_examples_count:>9} "  # noqa: SLF001
+                f"{s._mode_name:<6} {s._concept_name:<12} "  # noqa: SLF001  # pylint: disable=protected-access
+                f"{s._learner.labeled_examples_count:>9} "  # noqa: SLF001  # pylint: disable=protected-access
                 f"{vs_size:>8} "
                 f"{f1_str:>10} "
                 f"{'Yes' if converged else 'No':>10}"

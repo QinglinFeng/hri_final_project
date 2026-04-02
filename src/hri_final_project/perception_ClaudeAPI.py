@@ -108,7 +108,7 @@ class ClaudePerception:
 _COMPOUND_OBJECT_PROMPT = (
     "You are a vision system for a robot experiment. In the image, there are"
     " exactly two paper cutout shapes placed in a demonstration area on a black"
-    ' tablecloth. One shape is on top and one is on the bottom from the robot\'s'
+    " tablecloth. One shape is on top and one is on the bottom from the robot's"
     ' perspective (i.e., the shape closer to the back of the table is "top" and'
     ' the shape closer to the front of the table is "bottom").\n\n'
     "For each shape, identify:\n"
@@ -118,7 +118,8 @@ _COMPOUND_OBJECT_PROMPT = (
     "Size guidance: there are exactly two sizes in this set — small and large."
     " The large shapes (squares, triangles, circles) are roughly twice as big as"
     " the small ones. For triangles specifically: a LARGE triangle has a base"
-    " and height similar in length to the side of a large square. A SMALL triangle is clearly"
+    " and height similar in length to the side of a large square."
+    " A SMALL triangle is clearly"
     " much smaller. Do NOT default to small — if the triangle fills a noticeable"
     " area of the tablecloth, it is LARGE.\n\n"
     "Return your answer ONLY as a JSON object in this exact format, with no"
@@ -141,7 +142,7 @@ def perceive_compound_object(image_path: Path) -> CompoundObject:
     Returns:
         CompoundObject parsed from the model's JSON response.
     """
-    global _perception_instance  # noqa: PLW0603
+    global _perception_instance  # noqa: PLW0603  # pylint: disable=global-statement
     if _perception_instance is None:
         _perception_instance = ClaudePerception()
 

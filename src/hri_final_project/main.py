@@ -31,7 +31,9 @@ def main() -> None:
     session = runner.start_next_session()
     while session is not None:
         print(f"\n{'=' * 60}")
-        print(f"  Starting session: {session._concept_name} [{session._mode_name}]")  # noqa: SLF001
+        print(
+            f"  Starting session: {session._concept_name} [{session._mode_name}]"  # pylint: disable=protected-access
+        )  # noqa: SLF001
         print("  Type teacher utterances. Example:")
         print("    'Pepper, this is a HOUSE'")
         print("    'Pepper, is this a HOUSE?'")
