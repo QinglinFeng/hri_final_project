@@ -358,7 +358,7 @@ Check Terminal 1 output at startup — the order is randomized per subject.
 | Invite question (AQ mode) | `Pepper, do you have any questions?` |
 | End session | `Pepper, we are done` |
 
-### Concept Definitions (DO NOT SHARE WITH PARTICIPANT)
+### Concept Definitions (SHARE WITH PARTICIPANT)
 
 | Concept | Definition |
 |---|---|

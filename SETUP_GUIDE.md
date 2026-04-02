@@ -144,7 +144,7 @@ python3 woz_panel.py
 | `Perception failed` | Check that the API server is running and `.env` has the correct API key |
 | `No camera image received` | Wait a few seconds after `naoqi_driver initialized` before pressing ENTER |
 | Pepper doesn't speak | Make sure Terminal 2 (`start_ros.sh`) is still running |
-| Pepper's head moves randomly | Log in to `http://<PEPPER_IP>` (user: `nao`, password: `nao`) and turn off Autonomous Life |
+| Pepper's head moves randomly | Log in to `http://<PEPPER_IP>` (user: `nao`, password: `pepper1001`) and turn off Autonomous Life |
 
 ---
 
