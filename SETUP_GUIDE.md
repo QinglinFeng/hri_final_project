@@ -2,11 +2,13 @@
 
 This guide walks through setting up the HRI experiment software on a new laptop.
 
+> **Platform note:** Mac users use the `.sh` scripts; Windows users use the `.ps1` (PowerShell) equivalents. All other steps are the same unless noted.
+
 ---
 
 ## Prerequisites
 
-- macOS (Intel or Apple Silicon)
+- macOS (Intel or Apple Silicon) **or** Windows 10/11
 - Wi-Fi connection to the same network as Pepper
 - Pepper's IP address (press chest button once — Pepper says its IP)
 
@@ -37,15 +39,27 @@ cd hri_final_project
 
 Make sure you have Python 3.11+:
 ```bash
-python3 --version
+python3 --version   # Mac
+python --version    # Windows
 ```
 
 Create and activate the virtual environment:
+
+**Mac:**
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[develop]"
+pip install -e .
 ```
+
+**Windows (PowerShell):**
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e .
+```
+
+> If PowerShell blocks the script, run: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
 
 ---
 
@@ -53,17 +67,30 @@ pip install -e ".[develop]"
 
 1. Get the API key from the project owner
 2. Create a `.env` file in the project root:
+
+   **Mac:**
    ```bash
    echo "ANTHROPIC_API_KEY=your_api_key_here" > .env
    ```
 
+   **Windows (PowerShell):**
+   ```powershell
+   "ANTHROPIC_API_KEY=your_api_key_here" | Out-File -Encoding utf8 .env
+   ```
+
 ---
 
-## Step 5: Disable AirPlay Receiver (macOS)
+## Step 5: Free Up Port 5000
 
-Port 5000 conflicts with AirPlay Receiver on macOS. Disable it:
+**macOS:** Port 5000 conflicts with AirPlay Receiver — disable it:
 
 `System Settings → General → AirDrop & Handoff → AirPlay Receiver → Off`
+
+**Windows:** Port 5000 may be used by other services. Check with:
+```powershell
+netstat -ano | findstr :5000
+```
+If something is using it, stop that process or pass `--port 5001` to the API server.
 
 ---
 
@@ -71,9 +98,14 @@ Port 5000 conflicts with AirPlay Receiver on macOS. Disable it:
 
 This only needs to be done once per computer:
 
+**Mac:**
 ```bash
-cd hri_final_project
 ./docker/start_ros.sh <PEPPER_IP>
+```
+
+**Windows (PowerShell):**
+```powershell
+.\docker\start_ros.ps1 <PEPPER_IP>
 ```
 
 Replace `<PEPPER_IP>` with Pepper's IP address (e.g. `128.237.235.109`).
@@ -86,16 +118,30 @@ The first run will take a few minutes to build the Docker image. Subsequent runs
 
 Run this quick check before a study session:
 
+**Mac:**
 ```bash
 # Terminal 1 — API server
 source .venv/bin/activate
 python3 -m hri_final_project.api_server --subject test01
 
-# Terminal 2 — ROS + Pepper (in a new terminal)
+# Terminal 2 — ROS + Pepper
 ./docker/start_ros.sh <PEPPER_IP>
 
-# Terminal 3 — Pepper node (in a new terminal, after naoqi_driver initializes)
+# Terminal 3 — Pepper node (after naoqi_driver initializes)
 ./docker/start_pepper_node.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+# Terminal 1 — API server
+.venv\Scripts\Activate.ps1
+python -m hri_final_project.api_server --subject test01
+
+# Terminal 2 — ROS + Pepper
+.\docker\start_ros.ps1 <PEPPER_IP>
+
+# Terminal 3 — Pepper node (after naoqi_driver initializes)
+.\docker\start_pepper_node.ps1
 ```
 
 Place two shapes on the table, press **ENTER** in Terminal 3, type `Pepper, this is a HOUSE` — Pepper should speak a response.
@@ -107,29 +153,54 @@ Place two shapes on the table, press **ENTER** in Terminal 3, type `Pepper, this
 See `STUDY_MANUAL.md` for the full protocol. Here is the quick startup sequence:
 
 ### Terminal 1 — API Server
+
+**Mac:**
 ```bash
-cd hri_final_project
 source .venv/bin/activate
 python3 -m hri_final_project.api_server --subject <SUBJECT_ID>
+```
+**Windows:**
+```powershell
+.venv\Scripts\Activate.ps1
+python -m hri_final_project.api_server --subject <SUBJECT_ID>
 ```
 Wait for: `[Server] Listening on http://0.0.0.0:5000`
 
 ### Terminal 2 — ROS + Pepper
+
+**Mac:**
 ```bash
 ./docker/start_ros.sh <PEPPER_IP>
+```
+**Windows:**
+```powershell
+.\docker\start_ros.ps1 <PEPPER_IP>
 ```
 Wait for: `naoqi_driver initialized` and `[camera_keepalive] First frame received`
 
 ### Terminal 3 — Pepper Node
+
+**Mac:**
 ```bash
 ./docker/start_pepper_node.sh
+```
+**Windows:**
+```powershell
+.\docker\start_pepper_node.ps1
 ```
 Wait for: `[Press ENTER when the object is in view]`
 
 ### Terminal 4 — WoZ Panel (optional but recommended)
+
+**Mac:**
 ```bash
 source .venv/bin/activate
 python3 woz_panel.py
+```
+**Windows:**
+```powershell
+.venv\Scripts\Activate.ps1
+python woz_panel.py
 ```
 
 ---
@@ -138,8 +209,9 @@ python3 woz_panel.py
 
 | Problem | Fix |
 |---|---|
-| `docker: command not found` | Docker Desktop is not running — open it from Applications |
-| `Port 5000 already in use` | Disable AirPlay Receiver in System Settings |
+| `docker: command not found` | Docker Desktop is not running — open it from Applications (Mac) or system tray (Windows) |
+| `Port 5000 already in use` | Mac: disable AirPlay Receiver in System Settings. Windows: run `netstat -ano \| findstr :5000` to find and stop the conflicting process |
+| PowerShell script blocked | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` in PowerShell |
 | `naoqi_driver` crashes on start | Make sure Pepper is powered on and connected to the same Wi-Fi |
 | `Perception failed` | Check that the API server is running and `.env` has the correct API key |
 | `No camera image received` | Wait a few seconds after `naoqi_driver initialized` before pressing ENTER |
@@ -172,6 +244,12 @@ logs/<subject_id>_experiment.jsonl
 ```
 
 Back them up after each session:
+
+**Mac:**
 ```bash
 cp logs/<subject_id>_experiment.jsonl ~/Desktop/
+```
+**Windows:**
+```powershell
+copy logs\<subject_id>_experiment.jsonl $env:USERPROFILE\Desktop\
 ```
